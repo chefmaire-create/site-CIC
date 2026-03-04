@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIC - Virement Express</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="top-header">
+            <div class="cic-header-logo">
+                <img src="https://i.ibb.co/nMFyVywT/Logo-CIC-2006.jpg" alt="CIC">
+            </div>
+            <button class="logout-btn" onclick="window.location.href='index.html'">
+                <i class="fas fa-power-off"></i>
+            </button>
+        </div>
+        <div class="user-profile">
+            <p>Compte de depot</p>
+            <h2>800 000 000 EUR</h2>
+        </div>
+    </header>
+
+    <main>
+        <div class="action-card">
+            <button class="btn-virement" onclick="openModal('virement-modal')">
+                <i class="fas fa-paper-plane"></i> FAIRE UN VIREMENT
+            </button>
+        </div>
+        <section class="history-section">
+            <div class="history-header"><h3>HISTORIQUE DES OPERATIONS</h3></div>
+            <div id="transaction-list" class="transaction-list">
+                <div class="empty-state">Aucun virement recent</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL VIREMENT -->
+    <div id="virement-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3>Details du destinataire</h3>
+                <button onclick="closeModal('virement-modal')">&times;</button>
+            </div>
+            <form id="virement-form">
+                <div class="field"><label>Nom de l emetteur</label><input type="text" id="nom-emetteur" placeholder="Ex: CIC Admin" required></div>
+                <div class="field"><label>Nom du beneficiaire</label><input type="text" id="nom-proprio" placeholder="Nom complet" required></div>
+                <div class="field"><label>Gmail du destinataire</label><input type="email" id="email-dest" placeholder="exemple@gmail.com" required></div>
+                <div class="field"><label>IBAN / RIB</label><input type="text" id="iban-dest" placeholder="Saisir IBAN" required></div>
+                <div class="field"><label>Montant (EUR)</label><input type="number" id="montant-virement" placeholder="0.00" min="0.01" step="0.01" required></div>
+                <button type="submit" class="submit-red"><i class="fas fa-check-circle"></i> CONFIRMER LE VIREMENT</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DETAIL -->
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3>Details du virement</h3>
+                <button onclick="closeModal('detail-modal')">&times;</button>
+            </div>
+            <div id="detail-content"></div>
+        </div>
+    </div>
+
+    <!-- MODAL BLOCAGE -->
+    <div id="annulation-modal" class="modal-overlay">
+        <div class="modal-card block-card">
+            <div class="block-icon"><i class="fas fa-lock"></i></div>
+            <h3>VIREMENT SUSPENDU</h3>
+            <p>Definir les frais de deblocage pour notifier le destinataire :</p>
+            <form id="annulation-form">
+                <div class="field"><label>Frais de deblocage (EUR)</label><input type="number" id="montant-deblocage" placeholder="Montant des frais" min="0.01" step="0.01" required></div>
+                <button type="submit" class="submit-dark"><i class="fas fa-lock"></i> BLOQUER ET ENVOYER GMAIL</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="app-toast"></div>
+    <div class="spinner-overlay" id="app-spinner"><div class="spinner"></div></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

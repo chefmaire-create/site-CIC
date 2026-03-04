@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CIC - Connexion</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="login-body">
+
+    <div class="login-page">
+        <div class="login-header">
+            <div class="cic-logo-box">
+                <img src="https://i.ibb.co/nMFyVywT/Logo-CIC-2006.jpg" alt="Logo CIC">
+            </div>
+            <p class="login-tagline">La banque de votre region</p>
+        </div>
+
+        <div class="login-card">
+            <h2 class="login-card-title"><i class="fas fa-lock" style="margin-right:8px;font-size:.85rem;"></i>CONNEXION</h2>
+            <div class="login-error" id="login-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="error-msg">Identifiant ou mot de passe incorrect.</span>
+            </div>
+            <form id="login-form" onsubmit="doLogin(event)">
+                <div class="field">
+                    <label>Numero client</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user ico-left"></i>
+                        <input type="text" id="input-user" placeholder="Votre numero client" autocomplete="username" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Mot de passe</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-key ico-left"></i>
+                        <input type="password" id="input-pass" placeholder="••••••••" autocomplete="current-password" required>
+                        <button type="button" class="btn-toggle-pass" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="login-options">
+                    <label class="remember-me"><input type="checkbox" id="remember-me"> Se souvenir de moi</label>
+                    <span class="forgot-link" onclick="showForgot()">Mot de passe oublie ?</span>
+                </div>
+                <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> SE CONNECTER</button>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            <div class="badges">
+                <div class="badge-secure"><i class="fas fa-shield-alt"></i> Connexion SSL</div>
+                <div class="badge-secure"><i class="fas fa-check-circle"></i> Donnees chiffrees</div>
+            </div>
+            <p>© 2024 CIC — Simulation bancaire · Aucune transaction reelle</p>
+        </div>
+    </div>
+
+    <div class="spinner-overlay" id="spinner"><div class="spinner"></div></div>
+
+    <script>
+        var USERS = [{ login: 'DjanIsFake', password: '44454241' }];
+
+        function doLogin(e) {
+            e.preventDefault();
+            var user = document.getElementById('input-user').value.trim();
+            var pass = document.getElementById('input-pass').value;
+            hideError();
+            showSpinner(true);
+            setTimeout(function() {
+                var found = USERS.find(function(u) { return u.login === user && u.password === pass; });
+                if (found) {
+                    if (document.getElementById('remember-me').checked) localStorage.setItem('cic_user', user);
+                    window.location.href = 'dashboard.html';
+                } else {
+                    showSpinner(false);
+                    showError('Numero client ou mot de passe incorrect.');
+                    document.getElementById('input-pass').value = '';
+                    document.getElementById('input-pass').focus();
+                }
+            }, 900);
+        }
+
+        function togglePassword() {
+            var i = document.getElementById('input-pass');
+            var ic = document.getElementById('eye-icon');
+            if (i.type === 'password') { i.type = 'text'; ic.className = 'fas fa-eye-slash'; }
+            else { i.type = 'password'; ic.className = 'fas fa-eye'; }
+        }
+
+        function showForgot() { alert('Pour reinitialiser votre mot de passe,\ncontactez le CIC au 0 800 836 510.'); }
+        function showError(m) { document.getElementById('error-msg').textContent = m; document.getElementById('login-error').classList.add('show'); }
+        function hideError() { document.getElementById('login-error').classList.remove('show'); }
+        function showSpinner(v) { document.getElementById('spinner').classList.toggle('show', v); }
+
+        window.onload = function() {
+            var s = localStorage.getItem('cic_user');
+            if (s) {
+                document.getElementById('input-user').value = s;
+                document.getElementById('remember-me').checked = true;
+                document.getElementById('input-pass').focus();
+            }
+        };
+    </script>
+</body>
+</html>
